@@ -1,0 +1,11 @@
+allow-engine=MyISAM,innodb
+default-character-set=utf8mb4
+default-collation=utf8mb4_unicode_ci
+schema=devopsdb
+skip-format
+
+[test]
+flavor=mysql:8.0
+host=db
+port=3306
+user=root
