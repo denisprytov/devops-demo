@@ -1,0 +1,3 @@
+---
+tls_crt_path: /devops-demo/etc/devops-demo.crt
+tls_key_path: /devops-demo/etc/devops-demo.key

@@ -1,0 +1,24 @@
+---
+- name: Generate a self-signed private key
+  community.crypto.openssl_privatekey:
+    path: "{{ tls_key_path }}"
+    size: 4096
+    mode: 0644
+    type: RSA
+    state: present
+
+- name: Create certificate signing request (CSR) for self-signed certificate
+  community.crypto.openssl_csr_pipe:
+    privatekey_path: "{{ tls_key_path }}"
+    common_name: devops-demo
+    organization_name: devops-demo
+  register: csr
+
+- name: Generate a self-signed SSL/TLS certificate (valid for 10 years)
+  community.crypto.x509_certificate:
+    path: "{{ tls_crt_path }}"
+    privatekey_path: "{{ tls_key_path }}"
+    csr_content: "{{ csr.csr }}"
+    provider: selfsigned
+    selfsigned_not_after: "+3650d"
+    mode: 0644
