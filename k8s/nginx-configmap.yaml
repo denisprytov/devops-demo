@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    worker_processes  1;
+    events {
+      worker_connections  1024;
+    }
+    http {
+      include       mime.types;
+      default_type  application/octet-stream;
+      log_format    main_post   '$remote_addr - [$time_local] '
+                                '$host "$request" $status $bytes_sent [$request_body] '
+                                '"$http_referer" "$http_user_agent" '
+                                '"$gzip_ratio" $upstream_response_time';
+
+      keepalive_timeout 65;
+
+      server {
+        listen       80;
+
+        server_name  localhost;
+        root         /var/www/devops-demo;
+
+        client_max_body_size 32m;
+        error_page 404 = /index.php;
+
+        location / {
+          try_files $uri @router;
+        }
+        location @router {
+          fastcgi_pass 127.0.0.1:9000;
+          fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+          include fastcgi_params;
+        }
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        location ~ /\.ht {
+          deny  all;
+          access_log off;
+          log_not_found off;
+        }
+      }
+    }

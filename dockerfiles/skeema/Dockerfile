@@ -1,6 +1,10 @@
 FROM alpine:3.19
 
-WORKDIR /db_data
+COPY db_scheme /db_scheme
+
+COPY db_data /db_data
+
+WORKDIR /db_scheme
 
 RUN apk add --no-cache bash mysql-client mariadb-connector-c curl
 

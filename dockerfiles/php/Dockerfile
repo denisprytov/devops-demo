@@ -1,5 +1,7 @@
 FROM php:8.1-fpm
 
+COPY app /var/www/devops-demo
+
 WORKDIR /var/www/devops-demo
 
 RUN if [ ! -z $http_proxy ]; then pear config-set http_proxy $http_proxy; fi
