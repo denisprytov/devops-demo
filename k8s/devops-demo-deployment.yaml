@@ -20,8 +20,8 @@ spec:
             name: nginx-config
       containers:
         - name: devops-demo-php
-          image: devops-demo:1.3
-          imagePullPolicy: IfNotPresent
+          image: registry.gitlab.com/dprytov/devops-demo-2024/devops-demo:latest
+          imagePullPolicy: Always
           volumeMounts:
             - name: shared-files
               mountPath: /shared
@@ -31,7 +31,7 @@ spec:
                 command: ["/bin/sh", "-c", "cp -r /var/www/devops-demo/. /shared"]
         - name: devops-demo-nginx
           image: nginx
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           volumeMounts:
@@ -40,3 +40,5 @@ spec:
             - name: nginx-config-volume
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
+      imagePullSecrets:
+        - name: gitlab-token-auth

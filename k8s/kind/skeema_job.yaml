@@ -7,19 +7,21 @@ spec:
     spec:
       containers:
       - name: skeema
-        image: skeema:1.3
+        image: registry.gitlab.com/dprytov/devops-demo-2024/skeema:latest
         command: ["/bin/bash"]
         args:
           - -c
           - |
             skeema push test -p$MYSQL_ROOT_PASSWORD
             cd /db_data
-            mysql -uroot -hmysql -p$MYSQL_ROOT_PASSWORD devopsdb < ./devops-demo-version-1.3.sql
+            mysql -uroot -hmysql -p$MYSQL_ROOT_PASSWORD devopsdb < ./devops-demo-version-1.4.sql
         env:
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: mysql-password
                 key: MYSQL_ROOT_PASSWORD
+      imagePullSecrets:
+      - name: gitlab-token-auth
       restartPolicy: Never
   backoffLimit: 1
